@@ -1,0 +1,86 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    //declare variables and initialise some
+    int i = 0;
+    char message[100];
+    int a, b;
+    unsigned char character;
+    int x;
+
+    printf("Would you like to:\n(1) Encrypt\n(2) Decrypt\n");
+    scanf("%d", &x);
+    printf("What is the rotation cipher key?\n");
+    scanf("%d", &a);
+
+
+    if(a>0 && a<26)
+        {
+            b=a;
+        }else if(a>26)
+            {
+                b=a%26;
+            }else if(a<0 && a>=-26)
+                {
+                    b=26+a;
+                }else if(a<-26)
+                    {
+                        b=abs(a%26);
+                    }else
+                        {
+                            printf("You have netered an invalid character");
+                        }
+    printf("%d\n", b);
+
+    switch(x)
+    {
+        case 1:
+        printf("Please write the message you would like to encrypt:\n");
+        scanf("%s",message);
+        while(i<100 && message[i] != '\0')
+            {
+                character=message[i];
+                if(character>='a' && character<='z')
+                    {
+                        character = character + b;
+                        if(character > 'z')
+                            {
+                                character = character - 26;
+                            }
+                    }else
+                        {
+                            character=character;
+                        }
+            message[i]=character;
+            i++;
+        }
+    printf("%s", message);
+        break;
+
+        case 2:
+        printf("Please write the message you would like to decrypt:\n");
+        scanf("%s",message);
+        while(i<100 && message[i] != '\0')
+            {
+                character=message[i];
+                if(character>='a' && character<='z')
+                {
+                    character = character - b;
+                    if(character<'a')
+                        {
+                            character = character + 26;
+                        }
+                }else
+                    {
+                        character = character;
+                    }
+                message[i]=character;
+                i++;
+            }
+        printf("%s", message);
+        break;
+    }
+    return 0;
+}
