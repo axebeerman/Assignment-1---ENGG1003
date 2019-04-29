@@ -1,0 +1,128 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    char message[100]; //this will be the message to encrypt
+    char key[38]; //this will be the substitutuion key used to encrypt (has 27 allotted spaces to allow the \0 at end
+    char alpha[38]="ABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890"; //this is a string containg the alphabet for reference later on
+    char encrypted[100]; //this string will house the encrypted message
+    char decrypted[100]; //this string will house the decrypted message
+    char action; //this char will direct the program to encrypt or decrypt
+    int i=0, j=0, flag=0; //flags and counters
+    char letter; //temporary holder of jth charatcer (easier to see when used in encryption/decryption loops)
+    int numcount;
+
+
+    //This section will get the message to encrypt or decrypt from the user
+    printf("Please enter the message to encrypt or decrypt:\n");
+    scanf("%[^\n]s", message);
+
+    //This section will ask the user if they want to encrypt or decrypt
+    printf("Would you like to [E]ncrypt or [D]ecrypt the message?\n");
+    scanf(" %c", &action);
+
+    //This section of the code will get the encryption key from the user
+    printf("This program will encrypt lowercase letters, numbers and whitespace. \nTo do so, it will require 37 unique characters\n");
+    printf("Please enter the 37 character encryption key:\n");
+    scanf("%s", key);
+
+
+    //this section will make the program encrypt or decrypt, depending on the users input
+
+
+    if(action=='e'||action=='E')    //if the user inputs e or E, the program will go the encryption route
+    {
+        while(j<100 && message[j]!='\0')    //because the size of the message string is defined as 100, the program will look for characters in 100 spaces or stop if a string termination is found
+        {
+            letter=message[j];  //letter is a temporary variable that holds the jth character of the message string on each loop iteration
+            printf("Decrypted Letter = %c", message[j]);  //this line helps check the program is working
+            while(i<37 && flag==0) //there are 37 possible characters for encryption. each place of the string will be evaluated
+            {
+                if(letter>='a' && letter<='z') //this if statement converts any lowercase letters to uppercase ones
+                {
+                    letter=letter-32; //the uppercase ASCII code is offest to the lowercase ASCII code by 32. all values in uppercase after this
+                }
+                if(letter==alpha[i]) //this numerically identifies the spot where the letter is found in the alpha section
+                {
+                    flag=1; //alternative to break command. was used for debugging purposes
+                }
+                else
+                {
+                    i++; //if no match was found in this iteration, i is increased by 1 and started again until a match is found of search limit exceeded
+                }
+            }
+            if(flag==1) //if a match was found, flag will = 1. if this is the case, the position of the character in the alpha string can be used to dictate the position of its corresponding character in the key string
+            {
+                encrypted[j]=key[i];
+            }
+            else if(flag==0)    //if no match was found, the encrypted messag will just be the character
+            {
+                encrypted[j]=letter;
+            }
+            else    //this is just in case a strange error occurs
+            {
+                printf("Error - Try Again");
+            }
+            printf("    Encrypted = %c", encrypted[j]); //used for debugging purposes. also used to confirm that encryption is valid by user
+            printf("    Iteration Number = %d\n", j); //same as above comment
+            i=0;    //set i back to 0 so that process of checking the jth character of the message string can be checked again
+            flag=0; //flag set back to 0 so that loop can rerun
+            j++; //j loop counter gets 1 added to it
+        }
+        //this section was implemented because the strings were not clearing properly and still contained strange characters. i decided that instead of printing the string as a string, i would print each character individually and terminate when the maximum iteration (loop counter j from above) was reached
+        numcount=j;
+        j=0;
+        while(j<numcount && encrypted[j]!='\0')
+        {
+            printf("%c", encrypted[j]);
+            j++;
+        }
+    }
+    else if(action=='d'||action=='D')   //this section runs if user selects decryprtion option. code is identical to above except the decrypted string is used instead of the encrypted string. it was assumed that an encrypted message would only contain upper case characters because the message would be copied from the encryption done in this program which only outputs uppercase characters. for this reason, there was nothing done to change lowercase characters to uppercase ones
+    {
+
+        while(j<100 && message[j]!='\0')
+        {
+            letter=message[j];
+            printf("Encrypted Letter = %c", message[j]);
+            while(i<37 && flag==0)
+            {
+                if(letter==key[i])
+                {
+                    flag=1;
+                }
+                else
+                {
+                    i++;
+                }
+            }
+            if(flag==1)
+            {
+                decrypted[j]=alpha[i];
+            }
+            else if(flag==0)
+            {
+                decrypted[j]=letter;
+            }
+            else
+            {
+                printf("Error - Please Try Again");
+            }
+            printf("    Decrypted = %c", decrypted[j]);
+            printf("    Number = %d\n", j);
+            i=0;
+            flag=0;
+            j++;
+        }
+        numcount=j;
+        j=0;
+        while(j<numcount && decrypted[j]!='\0')
+        {
+            printf("%c", decrypted[j]);
+            j++;
+        }
+    }
+
+    return 0;
+}
