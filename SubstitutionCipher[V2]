@@ -1,0 +1,111 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int
+main ()
+{
+  //declare variables and initialise some
+  int i = 0;
+  char message[100];
+  int a, b;
+  unsigned char character;
+  int x;
+
+
+  printf ("Would you like to:\n(1) Encrypt\n(2) Decrypt\n");
+  scanf ("%d", &x);
+  printf ("What is the rotation cipher key?\n");
+  scanf ("%d", &a);
+
+
+  //this section of code changes the rotation so that it is always in terms of 26. for instance, a rotation of 28 means you complete 1 revolution and then go 2 places. this code impleemtns that logic
+  if (a > 0 && a < 26)
+    {
+      b = a;
+    }
+  else if (a > 26)
+    {
+      b = a % 26;
+    }
+  else if (a < 0 && a >= -26)
+    {
+      b = 26 + a;
+    }
+  else if (a < -26)
+    {
+      b = abs (a % 26);
+    }
+  else
+    {
+      printf ("You have netered an invalid character");
+    }
+  printf ("Your corrected cipher key is: %d\n", b);
+
+  switch (x)			//this switch statement tells the program to either encrypt or decrypt a message
+    {
+    case 1:
+      printf ("Please write the message you would like to encrypt:\n");
+      scanf (" %[^\n]s", message);
+      while (i < 100 && message[i] != '\0')	//100 is that maximum space allotted to the string and \0 is the string termination
+	{
+	  printf ("Iteration = %d  ", i);
+	  character = message[i];	//character is a temporary variable that holds the character found at the ith position of the message string
+	  printf ("    Input Character = %c", character);	//this print statement is unnecessary but makes the process
+	  if (character >= 'a' && character <= 'z')	//this if statement converts any lowercase letters to uppercase ones
+	    {
+	      character = character - 32;	//the uppercase ASCII code is offest to the lowercase ASCII code by 32. all values in uppercase after this
+	    }
+	  printf ("    Corrected Character = %c", character);	//this print statement is unnecessary but makes the process easier to understand and see
+	  if (character >= 'A' && character <= 'Z')	//if the character is greater than the ASCII A or less that ASCII Z, the new values of the character is the old value plus the rotation amount
+	    {
+	      character = character + b;	//adding rotation amount
+	      if (character > 'Z')	//if the roation amount takes it out of the uppercase alphabet ASCII range, loop it back around to the start
+		{
+		  character = character - 26;
+		}
+	    }
+	  else
+	    {
+	      character = character;	//if character was never in the ASCII uppercase alphabet range, leave it same. probably unecessary but makes it easier to follow if statements
+	    }
+	  message[i] = character;	//the ith slot of the message string will be replaced with the encrypted character
+	  printf ("    Encrypted Character = %c\n", message[i]);	//this print statement is unnecessary but makes the process
+	  i++;			//add 1 to loop count
+	}
+      printf ("%s", message);
+      break;
+
+    case 2:
+      printf ("Please write the message you would like to decrypt:\n");
+      scanf (" %[^\n]s", message);
+      while (i < 100 && message[i] != '\0')	//100 is that maximum space allotted to the string and \0 is the string termination
+	{
+	  printf ("Iteration = %d  ", i);
+	  character = message[i];	//character is a temporary variable that holds the character found at the ith position of the message string
+	  printf ("    Encrypted Character = %c", character);	//this print statement is unnecessary but makes the process
+	  if (character >= 'a' && character <= 'z')	//this if statement converts any lowercase letters to uppercase ones
+	    {
+	      character = character - 32;	//the uppercase ASCII code is offest to the lowercase ASCII code by 32. all values in uppercase after this
+	    }
+	  printf ("    Corrected Character = %c", character);	//this print statement is unnecessary but makes the process
+	  if (character >= 'A' && character <= 'Z')	//if the character is greater than the ASCII A or less that ASCII Z, the new values of the character is the old value minus the rotation amount (minus because it is going to 'opposite' way to the encryption
+	    {
+	      character = character - b;	//minusing roation amount
+	      if (character < 'A')	//if the roation amount takes it out of the uppercase alphabet ASCII range, loop it back around to the start (in this case, the start is in the opposite direction to the encryption case
+		{
+		  character = character + 26;
+		}
+	    }
+	  else
+	    {
+	      character = character;	//if character was never in the ASCII uppercase alphabet range, leave it same. probably unecessary but makes it easier to follow if statements
+	    }
+	  message[i] = character;	//the ith slot of the message string will be replaced with the encrypted character
+	  printf ("    Decrypted Character = %c\n", message[i]);	//this print statement is unnecessary but makes the process
+	  i++;			//add 1 to loop count
+	}
+      printf ("%s", message);
+      break;
+    }
+  return 0;
+}
